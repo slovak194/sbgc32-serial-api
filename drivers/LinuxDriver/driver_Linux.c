@@ -25,6 +25,7 @@
 
 #include "driver_Linux.h"
 
+#include <libexplain/open.h>
 
 /**	@addtogroup	LinuxDriver
  *	@{
@@ -40,10 +41,13 @@ void DriverInit (void *Driver, __USB_ADDR)
 
 	memcpy(&drv->device, dev, strlen(dev));
 
-	drv->devFD = open(drv->device, O_RDWR | O_NOCTTY | O_NDELAY);
+	drv->devFD = open("/dev/ttyS0", O_RDWR | O_NOCTTY | O_NDELAY);
 
 	if (drv->devFD == -1)
 	{
+
+        fprintf(stderr, "%s\n", explain_open(drv->device, O_RDWR | O_NOCTTY | O_NDELAY, S_IRWXU));
+
 		char errorStr [] = "Device not found!\n";
 		PrintDebugData(errorStr, strlen(errorStr));
 		return;
